@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+</head>
+
+<body>
+  <form>
+    <label id="halfRadioLabel" for="halfRadio1">Half Pouch</label>
+    <div id="halfRadio1">
+      <input type="radio" name="halfRadios" id="radio1" value="Aluminum" checked>
+      <label for="radio1">Aluminum</label>
+    </div>
+    <div id="halfRadio2">
+      <input type="radio" name="halfRadios" id="radio2" value="Clear">
+      <label for="radio2">Clear</label>
+    </div>
+    <label id="fullRadioLabel" for="fullRadio">Full Pouch</label>
+    <div id="fullRadio">
+      <input type="radio" name="fullRadios" id="radio3" value="Aluminum" checked>
+      <label for="radio3">Aluminum</label>
+    </div>
+    <div>
+      <input type="radio" name="fullRadios" id="radio4" value="Paper">
+      <label for="radio4">Paper</label>
+    </div>
+    <button class="btn" onclick="google.script.run.withSuccessHandler(google.script.host.close).switchData(this.parentNode);google.script.host.editor.focus();">Apply</button>
+  </form>
+</body>
+
+</html>
+
+
+
+<style>
+  #halfRadioLabel {
+    font-size: 1.125rem;
+    font-weight: bold;
+  }
+
+  #radio1 {
+    margin-top: 0.5rem;
+  }
+
+  #fullRadioLabel {
+    font-size: 1.125rem;
+    font-weight: bold;
+  }
+
+  #halfRadio2 {
+    margin-bottom: 1rem;
+  }
+  #radio3 {
+    margin-top: 0.5rem;
+  }
+
+  button {
+    margin-top: 1rem;
+    margin-left: 4rem;
+  }
+
+</style>

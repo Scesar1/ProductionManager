@@ -44,7 +44,7 @@ function appendData(data) {
       day = 'Wed';
       break;
     case 4:
-      day = 'Thurs';
+      day = 'Thu';
       break;
     case 5:
       day = 'Fri';
@@ -78,9 +78,10 @@ function dataImport() {
     const val = dateVals[row][0].toString();
     if (date === factDate) {
       break;
-    } else if (date < factDate) {
+    } else if (date < factDate && sheet.getRange(1,1).getValue().toString != "N") {
       Logger.log("Date doesn't exist in current log!");
-      SpreadsheetApp.getActiveSpreadsheet().toast("Date doesn't exist in current inventory sheet");
+      sheet.getRange(1,1).setValue("N");
+      break;
     } else if (val === "" && isNaN(factDate)) {
       invsheet.getRange(currRow, 1).setValue(sheet.getRange("Y2").getValue());
       break;
@@ -107,11 +108,12 @@ function dataImport() {
   invsheet.getRange(1421, 2).setValue(driedCol);
 
   invsheet.getRange(currRow, driedCol).setValue(driedResult);
-  const outputFormula = invsheet.getRange(currRow - 1, driedCol + 2).getFormulaR1C1();
+  const outputFormula = invsheet.getRange(4, driedCol + 2).getFormulaR1C1();
   invsheet.getRange(currRow, driedCol + 2).setFormulaR1C1(outputFormula);
 
-  const boxFormulas = invsheet.getRange(currRow - 1, 14, 1, 7).getFormulasR1C1();
-  invsheet.getRange(currRow, 14, 1, 7).setFormulasR1C1(boxFormulas);
+  invsheet.getRange(currRow - 1, 14, 1, 9).copyTo(invsheet.getRange(currRow, 14, 1, 9));
+  invsheet.getRange(currRow, 14, 1, 9).setBackground(null);
+  //invsheet.getRange(currRow, 14, 1, 7).setFormulasR1C1(boxFormulas);
   const silicaFormula = invsheet.getRange(currRow - 1, 23).getFormulaR1C1();
   invsheet.getRange(currRow, 23).setFormulaR1C1(silicaFormula);
 
@@ -122,10 +124,13 @@ function dataImport() {
   let fullPackSum = 0;
 
   const productVal1 = sheet.getRange("AD7:AK7").getValues();
+  Logger.log(productVal1[0][0].toString());
   if (productVal1[0][0].toString().includes("Half")) {
+    Logger.log("True");
     halfBoxSum += productVal1[0][4];
     halfPackSum += productVal1[0][7];
   } else if (productVal1[0][0].toString().includes("Full")) {
+    Logger.log("Executed Full!");
     fullBoxSum += productVal1[0][4];
     fullPackSum += productVal1[0][7];
   } else if (productVal1[0][0].toString() === "Shredded 40g") {
@@ -138,11 +143,11 @@ function dataImport() {
 
   const productVal2 = sheet.getRange("AD8:AK8").getValues();
   if (productVal2[0][0].toString().includes("Half")) {
-    halfBoxSum += productVal1[0][4];
-    halfPackSum += productVal1[0][7];
+    halfBoxSum += productVal2[0][4];
+    halfPackSum += productVal2[0][7];
   } else if (productVal2[0][0].toString().includes("Full")) {
-    fullBoxSum += productVal1[0][4];
-    fullPackSum += productVal1[0][7];
+    fullBoxSum += productVal2[0][4];
+    fullPackSum += productVal2[0][7];
   } else if (productVal2[0][0].toString() === "Shredded 40g") {
     invsheet.getRange(currRow, 12, 1, 1).setValue(productVal2[0][4]);
     invsheet.getRange(currRow, 13, 1, 1).setValue(productVal2[0][7]);
@@ -156,6 +161,12 @@ function dataImport() {
   fullPackSum += productVal602[0][3];
 
   const productValBulk = sheet.getRange("AH10").getValue();
+
+  const shreddedVals = sheet.getRange("F29:I30").getValues();
+
+  invsheet.getRange(currRow, 10, 1, 4).setValues([[shreddedVals[1][0], shreddedVals[1][2], shreddedVals[0][0], shreddedVals[0][2]]]);
+
+
 
   invsheet.getRange(currRow, 6, 1, 4).setValues([[halfBoxSum, fullBoxSum, halfPackSum, fullPackSum]]);
 
